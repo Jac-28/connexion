@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIA Cyber - Commande de Connexion</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --success: #2e7d32;
+            --dark: #0f172a;
+            --light: #f8f9fa;
+            --mobile-money: #ff6b00;
+            --navy: #0a192f;
+            --card-dark-bg: linear-gradient(135deg, #112240, #0a192f);
+            --neon-blue: #00f2fe;
+            --neon-green: #39ff14;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            padding: 16px;
+            font-size: 0.85rem;
+        }
+        header {
+            text-align: center;
+            background: #020c1b;
+            padding: 30px 16px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .radar-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-wifi-icon {
+            fill: var(--neon-blue);
+            width: 48px;
+            height: 48px;
+            z-index: 2;
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.8));
+        }
+        .radar-wave {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            opacity: 0;
+            animation: radar-glow 2s infinite linear;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+        .wave2 { animation-delay: 0.6s; }
+        .wave3 { animation-delay: 1.2s; }
+
+        @keyframes radar-glow {
+            0% { transform: scale(0.4); opacity: 0; }
+            30% { opacity: 0.6; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+        .subtitle-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            max-width: 550px;
+            color: #cbd5e1;
+        }
+        .subtitle-badge span { font-weight: bold; }
+        .highlight-blue { color: var(--neon-blue); text-shadow: 0 0 5px rgba(0, 242, 254, 0.5); }
+        .highlight-orange { color: #ff9d4d; }
+        .highlight-green { color: var(--neon-green); text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
+
+        .section-title {
+            margin: 30px 0 16px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-left: 5px solid var(--neon-blue);
+            padding-left: 10px;
+            color: #ffffff;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+        
+        .card {
+            background: var(--card-dark-bg);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.2);
+        }
+        .card.unlimited:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 8px 20px rgba(57, 255, 20, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .qty-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qty {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .card-wifi-icon {
+            fill: var(--neon-blue);
+            width: 18px;
+            height: 18px;
+        }
+        .unlimited .card-wifi-icon {
+            fill: var(--neon-green);
+        }
+        
+        .price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        
+        .validity {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-order {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .card:hover .btn-order {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .unlimited:hover .btn-order {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        /* Pop-up Modale */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(2, 12, 27, 0.8);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: #112240;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            color: #ffffff;
+        }
+        .momo-box {
+            background: rgba(255, 107, 0, 0.06);
+            border: 2px solid var(--mobile-money);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 0.95rem;
+            color: #ff9d4d;
+        }
+        .momo-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: block;
+            margin-top: 4px;
+            color: #ffffff;
+        }
+        
+        /* ZONE DE VÉRIFICATION NUMÉRIQUE */
+        .verification-zone {
+            margin: 15px 0 5px;
+            text-align: left;
+        }
+        .verification-zone label {
+            display: block;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .verification-zone input {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            letter-spacing: 1px;
+        }
+        .verification-zone input:focus {
+            border-color: var(--mobile-money);
+        }
+        .error-message {
+            color: #ff4a4a;
+            font-size: 0.75rem;
+            margin-top: 5px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .wifi-container {
+            display: none;
+            margin: 12px 0;
+        }
+        .wifi-code {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.04);
+            padding: 14px;
+            border-radius: 10px;
+            border: 2px dashed rgba(57, 255, 20, 0.25);
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px;
+        }
+        .btn-copy {
+            background: rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn-pay {
+            background: var(--mobile-money);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            width: 100%;
+            margin-top: 12px;
+        }
+        .payment-instructions {
+            text-align: left;
+            background: rgba(254, 240, 138, 0.03);
+            border: 1px solid rgba(254, 240, 138, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #fef08a;
+            line-height: 1.4;
+        }
+        .btn-close {
+            background: #ffffff;
+            color: #0f172a;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 12px;
+            width: 100%;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <svg style="display: none;">
+        <g id="wifi-svg">
+            <path d="M12 21a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6.07a5.96 5.96 0 0 0-4.22-1.77 5.96 5.96 0 0 0-4.23 1.77.75.75 0 0 1-1.06-1.06 7.46 7.46 0 0 1 5.29-2.21c1.98 0 3.84.77 5.29 2.21a.75.75 0 0 1-1.06 1.06zm0-4.25A10.18 10.18 0 0 0 4.8 7.7a10.2 10.2 0 0 0-2.12.22.75.75 0 1 1-.32-1.46A11.72 11.72 0 0 1 12 4.18c3.2 0 6.22 1.25 8.48 3.52a.75.75 0 1 1-1.06 1.06A10.16 10.16 0 0 0 12 10.68z"/>
+        </g>
+    </svg>
+
+    <header>
+        <div class="radar-container">
+            <div class="radar-wave wave1"></div>
+            <div class="radar-wave wave2"></div>
+            <div class="radar-wave wave3"></div>
+            <svg class="header-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg>
+        </div>
+        <h1>DIA Cyber</h1>
+        <div class="subtitle-badge">
+            ⚡ <span class="highlight-blue">Commandez</span> votre forfait, 
+            réglez par <span class="highlight-orange">Mobile Money</span> et 
+            récupérez votre <span class="highlight-green">code d'accès Wi-Fi</span> instantanément
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Forfaits Data</h2>
+        <div class="grid">
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">30 Mo</span></div><span class="price">100 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('30 Mo', '100 AR', '24h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">50 Mo</span></div><span class="price">200 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('50 Mo', '200 AR', '24h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">100 Mo</span></div><span class="price">300 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('100 Mo', '300 AR', '24h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">200 Mo</span></div><span class="price">500 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('200 Mo', '500 AR', '24h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">500 Mo</span></div><span class="price">1 000 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('500 Mo', '1 000 AR', '24h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">1,2 Go</span></div><span class="price">2 000 AR</span></div><div class="validity">⏱ Validité : 48h</div><button class="btn-order" onclick="initierCommande('1,2 Go', '2 000 AR', '48h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">3 Go</span></div><span class="price">3 000 AR</span></div><div class="validity">⏱ Validité : 72h</div><button class="btn-order" onclick="initierCommande('3 Go', '3 000 AR', '72h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">5 Go</span></div><span class="price">5 000 AR</span></div><div class="validity">⏱ Validité : 96h</div><button class="btn-order" onclick="initierCommande('5 Go', '5 000 AR', '96h')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">15 Go</span></div><span class="price">10 000 AR</span></div><div class="validity">⏱ Validité : 1 semaine</div><button class="btn-order" onclick="initierCommande('15 Go', '10 000 AR', '1 semaine')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">100 Go</span></div><span class="price">15 000 AR</span></div><div class="validity">⏱ Validité : 1 mois</div><button class="btn-order" onclick="initierCommande('100 Go', '15 000 AR', '1 mois')">Commander</button></div>
+            <div class="card"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">200 Go</span></div><span class="price">20 000 AR</span></div><div class="validity">⏱ Validité : 1 mois</div><button class="btn-order" onclick="initierCommande('200 Go', '20 000 AR', '1 mois')">Commander</button></div>
+        </div>
+
+        <h2 class="section-title">Forfaits Illimités</h2>
+        <div class="grid">
+            <div class="card unlimited"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">Illimité</span></div><span class="price">3 000 AR</span></div><div class="validity">⏱ Validité : 24h</div><button class="btn-order" onclick="initierCommande('Illimité', '3 000 AR', '24h')">Commander</button></div>
+            <div class="card unlimited"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">Illimité</span></div><span class="price">5 000 AR</span></div><div class="validity">⏱ Validité : 48h</div><button class="btn-order" onclick="initierCommande('Illimité', '5 000 AR', '48h')">Commander</button></div>
+            <div class="card unlimited"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">Illimité</span></div><span class="price">10 000 AR</span></div><div class="validity">⏱ Validité : 72h</div><button class="btn-order" onclick="initierCommande('Illimité', '10 000 AR', '72h')">Commander</button></div>
+            <div class="card unlimited"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">Illimité</span></div><span class="price">20 000 AR</span></div><div class="validity">⏱ Validité : 1 semaine</div><button class="btn-order" onclick="initierCommande('Illimité', '20 000 AR', '1 semaine')">Commander</button></div>
+            <div class="card unlimited"><div class="card-header"><div class="qty-box"><svg class="card-wifi-icon" viewBox="0 0 24 24"><use href="#wifi-svg"/></svg><span class="qty">Illimité</span></div><span class="price">50 000 AR</span></div><div class="validity">⏱ Validité : 1 mois</div><button class="btn-order" onclick="initierCommande('Illimité', '50 000 AR', '1 mois')">Commander</button></div>
+        </div>
+    </main>
+
+    <!-- Structure du Pop-up Mobile Money -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="color: var(--mobile-money);">Paiement Mobile Money 📱</h2>
+            <p style="margin-top: 10px;" id="modalDetails"></p>
+            
+            <div class="momo-box" id="momoBillingInfo">
+                Envoyez le montant exact au numéro :
+                <span class="momo-number">034 87 71 171</span>
+                <span style="font-size: 0.8rem; font-weight: normal; color: #94a3b8;">(Nom : DIA Cyber)</span>
+            </div>
+
+            <div class="payment-instructions" id="modalInstructions">
+                <strong>Instructions :</strong><br>
+                1. Effectuez votre transfert (Mvola, Orange ou Airtel Money).<br>
+                2. Saisissez votre **numéro de téléphone** payeur (10 chiffres).<br>
+                3. Cliquez ensuite sur le bouton de validation.
+            </div>
+
+            <!-- ZONE DE VÉRIFICATION NUMÉRIQUE -->
+            <div class="verification-zone" id="verifZone">
+                <label for="transactionInput">Votre numéro de téléphone (Payeur) :</label>
+                <input type="tel" id="transactionInput" maxlength="10" placeholder="Ex: 0348771171">
+                <div class="error-message" id="errorMsg">⚠️ Numéro malgache invalide. Entrez 10 chiffres commençant par 032, 033, 034, 037 ou 038.</div>
+            </div>
+
+            <button class="btn-pay" id="momoConfirmBtn">
+                J'ai effectué le paiement Mobile Money
+            </button>
+
+            <!-- Étape 2 -->
+            <div class="wifi-container" id="wifiBlock">
+                <p style="margin-top: 12px; font-weight: bold; color: #94a3b8;">Votre code Wi-Fi généré :</p>
+                <div class="wifi-code" id="generatedCode">------</div>
+                <button class="btn-copy" id="copyBtn" onclick="copierCode()">📋 Copier le code</button>
+            </div>
+            
+            <button class="btn-close" id="closeBtn" onclick="fermerModal()">Fermer et se connecter</button>
+        </div>
+    </div>
+
+    <script>
+        function genererCodeWifi() {
+            const majuscules = "ABCDEFGHJKLMNPQRSTUVWXYZ"; 
+            const minuscules = "abcdefghijkmnopqrstuvwxyz"; 
+            const chiffres = "23456789"; 
+            const speciaux = "@#$%&*!?";
+
+            let code = [];
+            code.push(majuscules.charAt(Math.floor(Math.random() * majuscules.length)));
+            code.push(minuscules.charAt(Math.floor(Math.random() * minuscules.length)));
+            code.push(chiffres.charAt(Math.floor(Math.random() * chiffres.length)));
+            code.push(speciaux.charAt(Math.floor(Math.random() * speciaux.length)));
+
+            const tousLesCaracteres = majuscules + minuscules + chiffres + speciaux;
+            for (let i = 0; i < 3; i++) {
+                code.push(tousLesCaracteres.charAt(Math.floor(Math.random() * tousLesCaracteres.length)));
+            }
+
+            for (let i = code.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [code[i], code[j]] = [code[j], code[i]];
+            }
+
+            return code.join('');
+        }
+
+        function initierCommande(quantite, prix, validite) {
+            document.getElementById('orderModal').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = "Paiement Mobile Money 📱";
+            document.getElementById('modalTitle').style.color = "var(--mobile-money)";
+            document.getElementById('modalDetails').innerHTML = `Forfait : <strong>${quantite}</strong> (${validite})<br>Montant à payer : <strong style="color:var(--mobile-money);">${prix}</strong>`;
+            
+            document.getElementById('transactionInput').value = "";
+            document.getElementById('errorMsg').style.display = 'none';
+            
+            document.getElementById('momoBillingInfo').style.display = 'block';
+            document.getElementById('modalInstructions').style.display = 'block';
+            document.getElementById('verifZone').style.display = 'block';
+            document.getElementById('momoConfirmBtn').style.display = 'block';
+            document.getElementById('wifiBlock').style.display = 'none';
+            document.getElementById('closeBtn').style.display = 'none';
+            
+            document.getElementById('momoConfirmBtn').onclick = function() {
+                const phoneInput = document.getElementById('transactionInput').value.trim();
+                
+                // FILTRE STRICT : Vérifie si c'est un vrai numéro à 10 chiffres (032..., 033..., 034..., 037..., 038...)
+                const regexMada = /^03[23478]\d{7}$/;
+                
+                if (!regexMada.test(phoneInput)) {
+                    document.getElementById('errorMsg').style.display = 'block';
+                    return;
+                }
+                
+                // Si le numéro est valide, on enregistre dans la console (sauvegarde locale simulée) et on affiche le code
+                console.log(`Paiement enregistré pour le forfait ${quantite} par le numéro : ${phoneInput}`);
+                afficherLeCodeApresPaiement(quantite, prix);
+            };
+        }
+
+        function afficherLeCodeApresPaiement(quantite, prix) {
+            const codeGenere = genererCodeWifi();
+            
+            document.getElementById('modalTitle').innerText = "Code Wi-Fi Disponible ! 🎉";
+            document.getElementById('modalTitle').style.color = "var(--neon-green)";
+            document.getElementById('modalDetails').innerHTML = `Merci ! Votre code pour le forfait <strong>${quantite}</strong> (${prix}) a été préparé.`;
+            
+            document.getElementById('momoBillingInfo').style.display = 'none';
+            document.getElementById('modalInstructions').style.display = 'none';
+            document.getElementById('verifZone').style.display = 'none';
+            document.getElementById('momoConfirmBtn').style.display = 'none';
+            
+            document.getElementById('generatedCode').innerText = codeGenere;
+            document.getElementById('wifiBlock').style.display = 'block';
+            document.getElementById('closeBtn').style.display = 'block';
+        }
+
+        function copierCode() {
+            const codeTexte = document.getElementById('generatedCode').innerText;
+            navigator.clipboard.writeText(codeTexte).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "✅ Code copié !";
+                setTimeout(() => { btn.innerText = "📋 Copier le code"; }, 2000);
+            });
+        }
+
+        function fermerModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
